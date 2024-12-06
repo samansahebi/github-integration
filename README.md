@@ -9,6 +9,12 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Swagger Docs:
+
+```
+http://localhost:8000/docs
+```
+
 ## Run With Docker:
 
 ```
