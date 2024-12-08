@@ -1,25 +1,36 @@
 import aiohttp
 from fastapi import APIRouter, Request, HTTPException
-from models import Actions
+from sqlmodel import select, Session
+from models import Actions, engine
 
 
 router = APIRouter()
 
 
-@router.get("/actions", response_model=list[Actions])
-async def list_actions(actions: Actions):
-    return {"action": actions.get_actions()}
+@router.get("/actions")
+async def list_actions():
+    with Session(engine) as session:
+        actions = select(Actions)
+        result = session.execute(actions).all()
+
+        return {"action": [list(res) for res in result]}
 
 
-@router.get("/actions/{action}", response_model=Actions)
-async def list_actions(actions: Actions, action: str):
-    return {"action": actions.get_action(action)}
+@router.get("/actions/{slug}", response_model=Actions)
+async def list_actions(slug: str):
+    with Session(engine) as session:
+        actions = select(Actions).where(Actions.slug == slug)
+        result = session.execute(actions).first()
+        return {"action": result}
 
 
 @router.post("/actions", response_model=Actions)
 async def create_actions(actions: Actions):
-    act = actions.create_action(actions)
-    return {"action": act}
+    with Session(engine) as session:
+        act = Actions(title=actions.title, description=actions.description, slug=actions.slug, parameters=actions.parameters)
+        session.add(act)
+        session.commit()
+        return {"action": act}
 
 
 @router.post("/actions/{action}", response_model=Actions)

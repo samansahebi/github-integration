@@ -1,4 +1,7 @@
-from sqlmodel import SQLModel, Field, Session, select, create_engine
+from datetime import datetime
+from typing import Optional
+
+from sqlmodel import SQLModel, Field, create_engine
 
 
 class Parameters(SQLModel, table=True):
@@ -12,11 +15,6 @@ class Parameters(SQLModel, table=True):
     def __str__(self):
         return self.key
 
-    def list(self, db: Session):
-        statement = select(self.model)
-        result = db.execute(statement)
-        return result.all()
-
 
 class Actions(SQLModel, table=True):
     id: int = Field(primary_key=True)
@@ -24,27 +22,11 @@ class Actions(SQLModel, table=True):
     slug: str = Field(max_length=100)
     description: str = Field(max_length=100)
     parameters: str = Field(max_length=100)
-    created_at: str = Field(max_length=100)
-    updated_at: str = Field(max_length=100)
+    created_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
+    updated_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
 
     def __str__(self):
         return self.title
-
-    async def list(self, db: Session):
-        statement = select(self.model)
-        result = db.execute(statement)
-        return result.all()
-
-    async def get(self, db: Session, slug: str):
-        statement = select(self.model).where(self.slug == slug)
-        result = db.execute(statement).first()
-        return result
-
-    async def create_action(self, action):
-        return Actions(title=action, method=action.method, description=action.description, parameters=action.parameters)
-
-    async def action_trigger(self, slug: str):
-        pass
 
 
 engine = create_engine(f'postgresql://postgres:postgres@localhost:5432/postgres')
