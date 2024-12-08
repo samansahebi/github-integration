@@ -1,18 +1,32 @@
 import aiohttp
 from fastapi import APIRouter, Request, HTTPException
-from github import Github, Auth
-from serializers import AuthenticateByUserPass
+from models import Actions
 
 
 router = APIRouter()
 
 
-@router.post("/authenticate")
-async def authenticate_user(authenticate: AuthenticateByUserPass):
-    auth = Auth.Login(authenticate.username, authenticate.password)
-    g = Github(auth=auth)
-    g.get_user()
-    return {"token": f"{auth.token}"}
+@router.get("/actions", response_model=list[Actions])
+async def list_actions(actions: Actions):
+    return {"action": actions.get_actions()}
+
+
+@router.get("/actions/{action}", response_model=Actions)
+async def list_actions(actions: Actions, action: str):
+    return {"action": actions.get_action(action)}
+
+
+@router.post("/actions", response_model=Actions)
+async def create_actions(actions: Actions):
+    act = actions.create_action(actions)
+    return {"action": act}
+
+
+@router.post("/actions/{action}", response_model=Actions)
+async def create_actions(actions: Actions, action: str):
+    if actions.get_action(action):
+        act = actions.action_trigger(actions)
+        return {"action": act}
 
 
 @router.get("/orgs/{org}/repos")

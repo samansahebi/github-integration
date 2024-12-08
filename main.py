@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from views import router
 import uvicorn
 
-
 app = FastAPI()
 app.include_router(router)
 
