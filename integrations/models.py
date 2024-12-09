@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from sqlmodel import SQLModel, Field, create_engine
+from sqlmodel import SQLModel, Field, create_engine, Relationship
 
 
 class Parameters(SQLModel, table=True):
@@ -21,7 +21,7 @@ class Actions(SQLModel, table=True):
     slug: str = Field(max_length=100)
     method: str = Field(max_length=100)
     description: str = Field(max_length=100)
-    parameters: Optional[Parameters] = Field(max_length=100)
+    parameters: list["Parameters"] = Relationship(back_populates="action")
     created_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
     updated_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
 

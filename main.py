@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from views import router
+from integrations.views import router
 import uvicorn
 
 app = FastAPI()

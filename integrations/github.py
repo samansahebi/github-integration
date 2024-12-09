@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 class Github:
 
-    def __init__(self, host):
+    def __init__(self):
         self.version = {'version': 'v0.0.1'}
         self.host = 'https://api.github.com'
 

@@ -1,9 +1,7 @@
-import aiohttp
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter
 from sqlmodel import select, Session
-
 from integrations.github import Github
-from models import Actions, engine
+from integrations.models import Actions, engine
 
 
 router = APIRouter()
@@ -44,7 +42,6 @@ async def create_actions(slug: str):
             params = dict()
             for param in action.parameters:
                 params[param.key] = param.value
-            host = 'https://github.com'
-            integration = Github(host=host)
+            integration = Github()
             result = getattr(integration, action.method, **params)
             return {"result": result}
