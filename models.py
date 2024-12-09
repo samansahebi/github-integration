@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Optional
-
 from sqlmodel import SQLModel, Field, create_engine
 
 
@@ -20,8 +19,9 @@ class Actions(SQLModel, table=True):
     id: int = Field(primary_key=True)
     title: str = Field(max_length=100)
     slug: str = Field(max_length=100)
+    method: str = Field(max_length=100)
     description: str = Field(max_length=100)
-    parameters: str = Field(max_length=100)
+    parameters: Optional[Parameters] = Field(max_length=100)
     created_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
     updated_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
 
