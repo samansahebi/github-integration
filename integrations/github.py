@@ -4,16 +4,15 @@ from fastapi import HTTPException
 
 class Github:
 
-    def __init__(self, host, token):
-        self.version = {'version': 'v0.0.1',}
-        self.host = host
-        self.token = token
+    def __init__(self, host):
+        self.version = {'version': 'v0.0.1'}
+        self.host = 'https://api.github.com'
 
-    async def get_organization_repositories(self, org: str):
+    async def get_organization_repositories(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/orgs/{org}/repos"
+            url = f"{self.host}/orgs/{params['org']}/repos"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -22,11 +21,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_repository(self, owner: str, repo: str):
+    async def get_repository(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/repos/{owner}/{repo}"
+            url = f"{self.host}/repos/{params['owner']}/{params['repo']}"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -35,11 +34,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_user_repositories(self, user: str):
+    async def get_user_repositories(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/users/{user}/repos"
+            url = f"{self.host}/users/{params['user']}/repos"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -48,11 +47,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_file_content(self, owner: str, repo: str, path: str):
+    async def get_file_content(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+            url = f"{self.host}/repos/{params['owner']}/{params['repo']}/contents/{params['path']}"
             session.headers.update({"Accept": "application/vnd.github.object+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -61,11 +60,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_all_repositories(self, owner: str, repo: str, ref: str):
+    async def get_all_repositories(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/repos/{owner}/{repo}/commits/{ref}"
+            url = f"{self.host}/repos/{params['owner']}/{params['repo']}/commits/{params['ref']}"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -74,11 +73,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_repository_branches(self, owner: str, repo: str):
+    async def get_repository_branches(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/repos/{owner}/{repo}/branches"
+            url = f"{self.host}/repos/{params['owner']}/{params['repo']}/branches"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -87,11 +86,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_repository_contributors(self, owner: str, repo: str):
+    async def get_repository_contributors(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
+            url = f"{self.host}/repos/{params['owner']}/{params['repo']}/contributors"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:
@@ -100,11 +99,11 @@ class Github:
                 else:
                     raise HTTPException(status_code=resp.status, detail=resp.reason)
 
-    async def get_repository_deployments(self, owner: str, repo: str):
+    async def get_repository_deployments(self, **params):
         async with aiohttp.ClientSession() as session:
-            url = f"https://api.github.com/repos/{owner}/{repo}/deployments"
+            url = f"{self.host}/repos/{params['owner']}/{params['repo']}/deployments"
             session.headers.update({"Accept": "application/vnd.github+json"})
-            session.headers.update({"Authorization": f"Bearer {self.token}"})
+            session.headers.update({"Authorization": f"Bearer {params['token']}"})
             session.headers.update({"X-GitHub-Api-Version": "2022-11-28"})
             async with session.get(url) as resp:
                 if resp.status == 200:

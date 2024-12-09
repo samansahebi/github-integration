@@ -36,15 +36,15 @@ async def create_actions(actions: Actions):
 
 
 @router.post("/actions/{slug}", response_model=Actions)
-async def create_actions(actions: Actions, slug: str):
+async def create_actions(slug: str):
     with Session(engine) as session:
         if slug.startswith('github'):
             statement = select(Actions).where(Actions.slug == slug)
             action = session.execute(statement).first()
-            token = action.parameters.filter(key='token').token
+            params = dict()
+            for param in action.parameters:
+                params[param.key] = param.value
             host = 'https://github.com'
-            if not token:
-                raise HTTPException(401, 'Invalid token')
-            integration = Github(host=host, token=token)
-            result = getattr(integration, actions.method)()
+            integration = Github(host=host)
+            result = getattr(integration, action.method, **params)
             return {"result": result}
