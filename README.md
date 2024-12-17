@@ -18,5 +18,5 @@ http://localhost:8000/docs
 ## Run With Docker:
 
 ```
-sudo docker compose -f docker-compose.yml build --up
+sudo docker compose -f docker-compose.yml up --build
 ```

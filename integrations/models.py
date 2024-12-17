@@ -22,6 +22,7 @@ class Actions(SQLModel, table=True):
     method: str = Field(max_length=100)
     description: str = Field(max_length=100)
     parameters: list["Parameters"] = Relationship(back_populates="action")
+    status: str = Field(max_length=100)
     created_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
     updated_at: Optional[datetime] = Field(default=datetime.utcnow(), nullable=False)
 
